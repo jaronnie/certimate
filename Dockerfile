@@ -14,6 +14,7 @@ COPY ../. /app/
 RUN rm -rf /app/ui/dist
 COPY --from=webui-builder /app/ui/dist /app/ui/dist
 ENV CGO_ENABLED=0
+ENV GOPROXY=https://goproxy.cn,direct
 RUN go build -trimpath -ldflags="-s -w" -o certimate
 
 

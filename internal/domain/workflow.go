@@ -97,19 +97,20 @@ func (t WorkflowNodeType) String() string {
 }
 
 const (
-	WorkflowNodeTypeStart       = WorkflowNodeType("start")
-	WorkflowNodeTypeEnd         = WorkflowNodeType("end")
-	WorkflowNodeTypeCondition   = WorkflowNodeType("condition")
-	WorkflowNodeTypeBranchBlock = WorkflowNodeType("branchBlock")
-	WorkflowNodeTypeTryCatch    = WorkflowNodeType("tryCatch")
-	WorkflowNodeTypeTryBlock    = WorkflowNodeType("tryBlock")
-	WorkflowNodeTypeCatchBlock  = WorkflowNodeType("catchBlock")
-	WorkflowNodeTypeDelay       = WorkflowNodeType("delay")
-	WorkflowNodeTypeBizApply    = WorkflowNodeType("bizApply")
-	WorkflowNodeTypeBizUpload   = WorkflowNodeType("bizUpload")
-	WorkflowNodeTypeBizMonitor  = WorkflowNodeType("bizMonitor")
-	WorkflowNodeTypeBizDeploy   = WorkflowNodeType("bizDeploy")
-	WorkflowNodeTypeBizNotify   = WorkflowNodeType("bizNotify")
+	WorkflowNodeTypeStart            = WorkflowNodeType("start")
+	WorkflowNodeTypeEnd              = WorkflowNodeType("end")
+	WorkflowNodeTypeCondition        = WorkflowNodeType("condition")
+	WorkflowNodeTypeBranchBlock      = WorkflowNodeType("branchBlock")
+	WorkflowNodeTypeTryCatch         = WorkflowNodeType("tryCatch")
+	WorkflowNodeTypeTryBlock         = WorkflowNodeType("tryBlock")
+	WorkflowNodeTypeCatchBlock       = WorkflowNodeType("catchBlock")
+	WorkflowNodeTypeDelay            = WorkflowNodeType("delay")
+	WorkflowNodeTypeBizApply         = WorkflowNodeType("bizApply")
+	WorkflowNodeTypeBizUpload        = WorkflowNodeType("bizUpload")
+	WorkflowNodeTypeBizMonitor       = WorkflowNodeType("bizMonitor")
+	WorkflowNodeTypeBizMonitorDomain = WorkflowNodeType("bizMonitorDomain")
+	WorkflowNodeTypeBizDeploy        = WorkflowNodeType("bizDeploy")
+	WorkflowNodeTypeBizNotify        = WorkflowNodeType("bizNotify")
 )
 
 type WorkflowNodeData struct {
@@ -191,7 +192,13 @@ func (c WorkflowNodeConfig) AsBizMonitor() WorkflowNodeConfigForBizMonitor {
 		Host:        host,
 		Port:        xmaps.GetOrDefaultInt32(c, "port", 443),
 		Domain:      xmaps.GetOrDefaultString(c, "domain", host),
-		RequestPath: xmaps.GetString(c, "path"),
+		RequestPath: xmaps.GetString(c, "requestPath"),
+	}
+}
+
+func (c WorkflowNodeConfig) AsBizMonitorDomain() WorkflowNodeConfigForBizMonitorDomain {
+	return WorkflowNodeConfigForBizMonitorDomain{
+		Domain: xmaps.GetString(c, "domain"),
 	}
 }
 
@@ -263,6 +270,10 @@ type WorkflowNodeConfigForBizMonitor struct {
 	Port        int32  `json:"port,omitempty"`        // 端口（零值时默认值 443）
 	Domain      string `json:"domain,omitempty"`      // 域名（零值时默认值 [Host]）
 	RequestPath string `json:"requestPath,omitempty"` // 请求路径
+}
+
+type WorkflowNodeConfigForBizMonitorDomain struct {
+	Domain string `json:"domain"` // 待监控的域名
 }
 
 type WorkflowNodeConfigForBizDeploy struct {

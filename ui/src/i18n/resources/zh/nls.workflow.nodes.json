@@ -11,6 +11,9 @@
     "type": {
       "certificate": {
         "label": "证书"
+      },
+      "domain": {
+        "label": "域名"
       }
     },
     "selector": {
@@ -425,6 +428,23 @@
       "request_path": {
         "label": "请求路径（可选）",
         "placeholder": "请输入请求路径"
+      }
+    }
+  },
+
+  "monitor_domain": {
+    "label": "监控网站域名",
+    "default_name": "域名监控",
+    "form_anchor": {
+      "parameters": {
+        "tab": "参数设置"
+      }
+    },
+    "form": {
+      "guide": "将通过 Whois 查询域名注册到期时间，并写入监控指标。",
+      "domain": {
+        "label": "域名",
+        "placeholder": "请输入域名"
       }
     }
   },

@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/certimate-go/certimate/internal/app"
+	"github.com/certimate-go/certimate/internal/domain"
 	"github.com/certimate-go/certimate/internal/repository"
 	xcertx509 "github.com/certimate-go/certimate/pkg/utils/cert/x509"
 	xhttp "github.com/certimate-go/certimate/pkg/utils/http"
@@ -31,7 +32,7 @@ import (
 type bizMonitorNodeExecutor struct {
 	nodeExecutor
 
-	certificateRepo certificateRepository
+	monitorCertificateRepo monitorCertificateRepository
 }
 
 func (ne *bizMonitorNodeExecutor) Execute(execCtx *NodeExecutionContext) (*NodeExecutionResult, error) {
@@ -90,6 +91,10 @@ func (ne *bizMonitorNodeExecutor) Execute(execCtx *NodeExecutionContext) (*NodeE
 				strings.Join(xcertx509.GetSubjectAltNames(cert), ";")),
 			)
 			ne.setVariablesOfResult(execCtx, execRes, cert)
+			if err := ne.saveMonitorCertificate(execCtx, targetDomain, cert); err != nil {
+				ne.logger.Warn("could not save monitor certificate")
+				return execRes, err
+			}
 
 			now := time.Now()
 			isCertPeriodValid := now.Before(cert.NotAfter) && now.After(cert.NotBefore)
@@ -157,6 +162,40 @@ func (ne *bizMonitorNodeExecutor) execRetrieveCertificates(execCtx *NodeExecutio
 	return resp.TLS.PeerCertificates, nil
 }
 
+func (ne *bizMonitorNodeExecutor) saveMonitorCertificate(execCtx *NodeExecutionContext, targetDomain string, certX509 *x509.Certificate) error {
+	if certX509 == nil {
+		return nil
+	}
+
+	monitorDomain := strings.TrimSuffix(strings.ToLower(strings.TrimSpace(targetDomain)), ".")
+	monitorCertificate := &domain.MonitorCertificate{
+		MonitorDomain:              monitorDomain,
+		CertificateSubjectAltNames: strings.Join(xcertx509.GetSubjectAltNames(certX509), ";"),
+		CertificateSerialNumber:    strings.ToUpper(certX509.SerialNumber.Text(16)),
+		CertificateIssuerName:      certX509.Issuer.CommonName,
+		CertificateNotBefore:       certX509.NotBefore,
+		CertificateNotAfter:        certX509.NotAfter,
+		WorkflowId:                 execCtx.WorkflowId,
+		WorkflowRunId:              execCtx.RunId,
+		WorkflowNodeId:             execCtx.Node.Id,
+	}
+
+	lastMonitorCertificate, err := ne.monitorCertificateRepo.GetByMonitorDomain(execCtx.Context(), monitorDomain)
+	if err != nil && !domain.IsRecordNotFoundError(err) {
+		return err
+	}
+	if lastMonitorCertificate != nil {
+		monitorCertificate.Id = lastMonitorCertificate.Id
+	}
+
+	if monitorCertificate, err = ne.monitorCertificateRepo.Save(execCtx.Context(), monitorCertificate); err != nil {
+		return err
+	}
+
+	ne.logger.Info("monitor certificate saved", slog.String("recordId", monitorCertificate.Id), slog.String("domain", monitorCertificate.MonitorDomain))
+	return nil
+}
+
 func (ne *bizMonitorNodeExecutor) setVariablesOfResult(execCtx *NodeExecutionContext, execRes *NodeExecutionResult, certX509 *x509.Certificate) {
 	var vCommonName string
 	var vSubjectAltNames string
@@ -198,7 +237,7 @@ func (ne *bizMonitorNodeExecutor) setVariablesOfResult(execCtx *NodeExecutionCon
 
 func newBizMonitorNodeExecutor() NodeExecutor {
 	return &bizMonitorNodeExecutor{
-		nodeExecutor:    nodeExecutor{logger: slog.Default()},
-		certificateRepo: repository.NewCertificateRepository(),
+		nodeExecutor:           nodeExecutor{logger: slog.Default()},
+		monitorCertificateRepo: repository.NewMonitorCertificateRepository(),
 	}
 }

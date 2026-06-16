@@ -61,6 +61,8 @@ require (
 	github.com/pocketbase/pocketbase v0.39.3
 	github.com/povsister/scp v0.0.0-20250701154629-777cf82de5df
 	github.com/pquerna/otp v1.5.0
+	github.com/prometheus/client_golang v1.23.2
+	github.com/prometheus/common v0.66.1
 	github.com/qiniu/go-sdk/v7 v7.26.12
 	github.com/samber/lo v1.53.0
 	github.com/spf13/cobra v1.10.2
@@ -190,6 +192,7 @@ require (
 	github.com/aws/aws-sdk-go-v2/service/sts v1.43.2 // indirect
 	github.com/aws/smithy-go v1.27.1 // indirect
 	github.com/aymerick/douceur v0.2.0 // indirect
+	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/bodgit/gssapi v0.0.3 // indirect
 	github.com/bodgit/tsig v1.3.1 // indirect
 	github.com/boombuler/barcode v1.1.0 // indirect
@@ -259,6 +262,8 @@ require (
 	github.com/openshift/gssapi v0.0.0-20161010215902-5fb4217df13b // indirect
 	github.com/philhofer/fwd v1.2.0 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
+	github.com/prometheus/client_model v0.6.2 // indirect
+	github.com/prometheus/procfs v0.16.1 // indirect
 	github.com/rs/xid v1.6.0 // indirect
 	github.com/spf13/afero v1.15.0 // indirect
 	github.com/spf13/cast v1.10.0 // indirect

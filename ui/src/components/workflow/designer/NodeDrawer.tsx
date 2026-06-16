@@ -7,6 +7,7 @@ import { useTriggerElement } from "@/hooks";
 
 import BizApplyNodeConfigDrawer from "./forms/BizApplyNodeConfigDrawer";
 import BizDeployNodeConfigDrawer from "./forms/BizDeployNodeConfigDrawer";
+import BizMonitorDomainNodeConfigDrawer from "./forms/BizMonitorDomainNodeConfigDrawer";
 import BizMonitorNodeConfigDrawer from "./forms/BizMonitorNodeConfigDrawer";
 import BizNotifyNodeConfigDrawer from "./forms/BizNotifyNodeConfigDrawer";
 import BizUploadNodeConfigDrawer from "./forms/BizUploadNodeConfigDrawer";
@@ -68,6 +69,9 @@ const NodeDrawer = ({ node, trigger, ...props }: NodeDrawerProps) => {
         </Show.Case>
         <Show.Case when={node?.flowNodeType === NodeType.BizMonitor}>
           <BizMonitorNodeConfigDrawer {...drawerProps} />
+        </Show.Case>
+        <Show.Case when={node?.flowNodeType === NodeType.BizMonitorDomain}>
+          <BizMonitorDomainNodeConfigDrawer {...drawerProps} />
         </Show.Case>
         <Show.Case when={node?.flowNodeType === NodeType.BizDeploy}>
           <BizDeployNodeConfigDrawer {...drawerProps} />

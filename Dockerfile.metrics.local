@@ -1,0 +1,3 @@
+FROM certimate/certimate:metrics-base
+
+COPY build/certimate_linux_amd64_metrics /app/certimate

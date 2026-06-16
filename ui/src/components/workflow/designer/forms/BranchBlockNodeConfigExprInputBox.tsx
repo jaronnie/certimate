@@ -168,7 +168,13 @@ const BranchBlockNodeConfigExprInputBox = forwardRef<BranchBlockNodeConfigExprIn
 
     const ciSelectorOptions = useMemo(() => {
       return getAllPreviousNodes(node)
-        .filter((node) => node.flowNodeType === NodeType.BizApply || node.flowNodeType === NodeType.BizUpload || node.flowNodeType === NodeType.BizMonitor)
+        .filter(
+          (node) =>
+            node.flowNodeType === NodeType.BizApply ||
+            node.flowNodeType === NodeType.BizUpload ||
+            node.flowNodeType === NodeType.BizMonitor ||
+            node.flowNodeType === NodeType.BizMonitorDomain
+        )
         .map((node) => {
           const form = node.form;
           const group = {
@@ -187,18 +193,33 @@ const BranchBlockNodeConfigExprInputBox = forwardRef<BranchBlockNodeConfigExprIn
             options: Array<{ label: string; value: string }>(),
           };
 
-          group.options.push({
-            label: `${t("workflow_node.variables.type.certificate.label")} - ${t("workflow_node.variables.selector.hours_left.label")}`,
-            value: `${node.id}#certificate.hoursLeft#number`,
-          });
-          group.options.push({
-            label: `${t("workflow_node.variables.type.certificate.label")} - ${t("workflow_node.variables.selector.days_left.label")}`,
-            value: `${node.id}#certificate.daysLeft#number`,
-          });
-          group.options.push({
-            label: `${t("workflow_node.variables.type.certificate.label")} - ${t("workflow_node.variables.selector.validity.label")}`,
-            value: `${node.id}#certificate.validity#boolean`,
-          });
+          if (node.flowNodeType === NodeType.BizMonitorDomain) {
+            group.options.push({
+              label: `${t("workflow_node.variables.type.domain.label")} - ${t("workflow_node.variables.selector.hours_left.label")}`,
+              value: `${node.id}#domain.hoursLeft#number`,
+            });
+            group.options.push({
+              label: `${t("workflow_node.variables.type.domain.label")} - ${t("workflow_node.variables.selector.days_left.label")}`,
+              value: `${node.id}#domain.daysLeft#number`,
+            });
+            group.options.push({
+              label: `${t("workflow_node.variables.type.domain.label")} - ${t("workflow_node.variables.selector.validity.label")}`,
+              value: `${node.id}#domain.validity#boolean`,
+            });
+          } else {
+            group.options.push({
+              label: `${t("workflow_node.variables.type.certificate.label")} - ${t("workflow_node.variables.selector.hours_left.label")}`,
+              value: `${node.id}#certificate.hoursLeft#number`,
+            });
+            group.options.push({
+              label: `${t("workflow_node.variables.type.certificate.label")} - ${t("workflow_node.variables.selector.days_left.label")}`,
+              value: `${node.id}#certificate.daysLeft#number`,
+            });
+            group.options.push({
+              label: `${t("workflow_node.variables.type.certificate.label")} - ${t("workflow_node.variables.selector.validity.label")}`,
+              value: `${node.id}#certificate.validity#boolean`,
+            });
+          }
 
           return group;
         })

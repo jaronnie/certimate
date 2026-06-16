@@ -310,4 +310,9 @@ const (
 	stateVarKeyCertificateHoursLeft       = "certificate.hoursLeft"       // ValueType: "number"
 	stateVarKeyCertificateDaysLeft        = "certificate.daysLeft"        // ValueType: "number"
 	stateVarKeyCertificateValidity        = "certificate.validity"        // ValueType: "boolean"
+	stateVarKeyDomainName                 = "domain.name"                 // ValueType: "string"
+	stateVarKeyDomainNotAfter             = "domain.notAfter"             // ValueType: "datetime"
+	stateVarKeyDomainHoursLeft            = "domain.hoursLeft"            // ValueType: "number"
+	stateVarKeyDomainDaysLeft             = "domain.daysLeft"             // ValueType: "number"
+	stateVarKeyDomainValidity             = "domain.validity"             // ValueType: "boolean"
 )

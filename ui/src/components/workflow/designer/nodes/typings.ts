@@ -22,6 +22,7 @@ export enum NodeType {
   BizApply = "bizApply",
   BizUpload = "bizUpload",
   BizMonitor = "bizMonitor",
+  BizMonitorDomain = "bizMonitorDomain",
   BizDeploy = "bizDeploy",
   BizNotify = "bizNotify",
 }
@@ -38,6 +39,7 @@ console.assert(NodeType.CatchBlock === WORKFLOW_NODE_TYPES.CATCHBLOCK);
 console.assert(NodeType.BizApply === WORKFLOW_NODE_TYPES.BIZ_APPLY);
 console.assert(NodeType.BizUpload === WORKFLOW_NODE_TYPES.BIZ_UPLOAD);
 console.assert(NodeType.BizMonitor === WORKFLOW_NODE_TYPES.BIZ_MONITOR);
+console.assert(NodeType.BizMonitorDomain === WORKFLOW_NODE_TYPES.BIZ_MONITOR_DOMAIN);
 console.assert(NodeType.BizDeploy === WORKFLOW_NODE_TYPES.BIZ_DEPLOY);
 console.assert(NodeType.BizNotify === WORKFLOW_NODE_TYPES.BIZ_NOTIFY);
 

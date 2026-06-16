@@ -46,6 +46,7 @@ export const WORKFLOW_NODE_TYPES = Object.freeze({
   BIZ_APPLY: "bizApply",
   BIZ_UPLOAD: "bizUpload",
   BIZ_MONITOR: "bizMonitor",
+  BIZ_MONITOR_DOMAIN: "bizMonitorDomain",
   BIZ_DEPLOY: "bizDeploy",
   BIZ_NOTIFY: "bizNotify",
 } as const);
@@ -151,6 +152,16 @@ export const defaultNodeConfigForBizMonitor = (): Partial<WorkflowNodeConfigForB
     host: "",
     port: 443,
     requestPath: "/",
+  };
+};
+
+export type WorkflowNodeConfigForBizMonitorDomain = {
+  domain: string;
+};
+
+export const defaultNodeConfigForBizMonitorDomain = (): Partial<WorkflowNodeConfigForBizMonitorDomain> => {
+  return {
+    domain: "",
   };
 };
 
@@ -305,6 +316,16 @@ export const newNode = (type: WorkflowNodeType, { i18n = getI18n() }: { i18n?: R
         data: {
           name: t("workflow_node.monitor.default_name"),
           config: defaultNodeConfigForBizMonitor(),
+        },
+      };
+
+    case WORKFLOW_NODE_TYPES.BIZ_MONITOR_DOMAIN:
+      return {
+        id: newNodeId(),
+        type: type,
+        data: {
+          name: t("workflow_node.monitor_domain.default_name"),
+          config: defaultNodeConfigForBizMonitorDomain(),
         },
       };
 

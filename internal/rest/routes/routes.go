@@ -6,6 +6,7 @@ import (
 	"github.com/pocketbase/pocketbase/tools/router"
 
 	"github.com/certimate-go/certimate/internal/certificate"
+	"github.com/certimate-go/certimate/internal/metrics"
 	"github.com/certimate-go/certimate/internal/notify"
 	"github.com/certimate-go/certimate/internal/repository"
 	"github.com/certimate-go/certimate/internal/rest/handlers"
@@ -18,6 +19,7 @@ var (
 	workflowSvc    *workflow.WorkflowService
 	statisticsSvc  *statistics.StatisticsService
 	notifySvc      *notify.NotifyService
+	metricsSvc     *metrics.Service
 )
 
 func BindRouter(router *router.Router[*core.RequestEvent]) {
@@ -28,11 +30,16 @@ func BindRouter(router *router.Router[*core.RequestEvent]) {
 	certificateRepo := repository.NewCertificateRepository()
 	settingsRepo := repository.NewSettingsRepository()
 	statisticsRepo := repository.NewStatisticsRepository()
+	monitorCertificateRepo := repository.NewMonitorCertificateRepository()
+	monitorDomainRepo := repository.NewMonitorDomainRepository()
 
 	certificateSvc = certificate.NewCertificateService(acmeAccountRepo, certificateRepo, settingsRepo)
 	workflowSvc = workflow.NewWorkflowService(workflowRepo, workflowRunRepo, settingsRepo)
 	statisticsSvc = statistics.NewStatisticsService(statisticsRepo)
 	notifySvc = notify.NewNotifyService(accessRepo)
+	metricsSvc = metrics.NewService(monitorCertificateRepo, monitorDomainRepo)
+
+	handlers.NewMetricsHandler(router, metricsSvc)
 
 	group := router.Group("/api")
 	group.Bind(apis.RequireSuperuserAuth())

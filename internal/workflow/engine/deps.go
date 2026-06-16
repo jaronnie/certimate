@@ -16,6 +16,16 @@ type certificateRepository interface {
 	Save(ctx context.Context, certificate *domain.Certificate) (*domain.Certificate, error)
 }
 
+type monitorCertificateRepository interface {
+	GetByMonitorDomain(ctx context.Context, monitorDomain string) (*domain.MonitorCertificate, error)
+	Save(ctx context.Context, monitorCertificate *domain.MonitorCertificate) (*domain.MonitorCertificate, error)
+}
+
+type monitorDomainRepository interface {
+	GetByDomainName(ctx context.Context, domainName string) (*domain.MonitorDomain, error)
+	Save(ctx context.Context, monitorDomain *domain.MonitorDomain) (*domain.MonitorDomain, error)
+}
+
 type workflowOutputRepository interface {
 	GetByWorkflowIdAndNodeId(ctx context.Context, workflowId string, workflowNodeId string) (*domain.WorkflowOutput, error)
 	Save(ctx context.Context, workflowOutput *domain.WorkflowOutput) (*domain.WorkflowOutput, error)

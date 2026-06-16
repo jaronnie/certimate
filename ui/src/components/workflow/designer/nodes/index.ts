@@ -1,6 +1,7 @@
 ﻿import { BizApplyNodeRegistry } from "./BizApplyNodeRegistry";
 import { BizDeployNodeRegistry } from "./BizDeployNodeRegistry";
 import { BizMonitorNodeRegistry } from "./BizMonitorNodeRegistry";
+import { BizMonitorDomainNodeRegistry } from "./BizMonitorDomainNodeRegistry";
 import { BizNotifyNodeRegistry } from "./BizNotifyNodeRegistry";
 import { BizUploadNodeRegistry } from "./BizUploadNodeRegistry";
 import { BranchBlockNodeRegistry, ConditionNodeRegistry } from "./ConditionNode";
@@ -17,6 +18,7 @@ export const getAllNodeRegistries = () => {
     BizApplyNodeRegistry,
     BizUploadNodeRegistry,
     BizMonitorNodeRegistry,
+    BizMonitorDomainNodeRegistry,
     BizDeployNodeRegistry,
     BizNotifyNodeRegistry,
     ConditionNodeRegistry,

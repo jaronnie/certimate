@@ -1,0 +1,6 @@
+FROM alpine:latest
+
+WORKDIR /app
+COPY build/certimate_linux_amd64_metrics /app/certimate
+
+ENTRYPOINT ["./certimate", "serve", "--http", "0.0.0.0:8090"]

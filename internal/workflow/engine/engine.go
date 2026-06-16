@@ -352,6 +352,7 @@ func NewWorkflowEngine() WorkflowEngine {
 	engine.executors[NodeTypeBizApply] = newBizApplyNodeExecutor()
 	engine.executors[NodeTypeBizUpload] = newBizUploadNodeExecutor()
 	engine.executors[NodeTypeBizMonitor] = newBizMonitorNodeExecutor()
+	engine.executors[NodeTypeBizMonitorDomain] = newBizMonitorDomainNodeExecutor()
 	engine.executors[NodeTypeBizDeploy] = newBizDeployNodeExecutor()
 	engine.executors[NodeTypeBizNotify] = newBizNotifyNodeExecutor()
 	return engine

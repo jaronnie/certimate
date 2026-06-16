@@ -11,6 +11,9 @@
     "type": {
       "certificate": {
         "label": "Certificate"
+      },
+      "domain": {
+        "label": "Domain"
       }
     },
     "selector": {
@@ -426,6 +429,23 @@
       "request_path": {
         "label": "Request path (Optional)",
         "placeholder": "Please enter request path"
+      }
+    }
+  },
+
+  "monitor_domain": {
+    "label": "Monitor domain",
+    "default_name": "Domain monitoring",
+    "form_anchor": {
+      "parameters": {
+        "tab": "Parameters"
+      }
+    },
+    "form": {
+      "guide": "It will query the domain registration expiration time through Whois and expose it in monitoring metrics.",
+      "domain": {
+        "label": "Domain",
+        "placeholder": "Please enter domain name"
       }
     }
   },
