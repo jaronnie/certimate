@@ -29,9 +29,9 @@ func (ne *bizMonitorDomainNodeExecutor) Execute(execCtx *NodeExecutionContext) (
 		return execRes, fmt.Errorf("domain is required")
 	}
 
-	domainExpiry, err := domainexp.Lookup(execCtx.Context(), monitorDomain)
+	domainExpiry, err := ne.lookupDomainExpirationWithRetry(execCtx, monitorDomain)
 	if err != nil {
-		return execRes, fmt.Errorf("failed to retrieve domain expiration: %w", err)
+		return execRes, fmt.Errorf("failed to retrieve domain expiration after retries: %w", err)
 	}
 
 	record := &domain.MonitorDomain{
@@ -65,6 +65,40 @@ func (ne *bizMonitorDomainNodeExecutor) Execute(execCtx *NodeExecutionContext) (
 	)
 	ne.logger.Info("monitoring completed")
 	return execRes, nil
+}
+
+func (ne *bizMonitorDomainNodeExecutor) lookupDomainExpirationWithRetry(execCtx *NodeExecutionContext, monitorDomain string) (*domainexp.LookupResult, error) {
+	const maxAttempts = 3
+	const retryInterval = 2 * time.Second
+
+	var lastErr error
+	for attempt := 1; attempt <= maxAttempts; attempt++ {
+		domainExpiry, err := domainexp.Lookup(execCtx.Context(), monitorDomain)
+		if err == nil {
+			return domainExpiry, nil
+		}
+
+		lastErr = err
+		if attempt == maxAttempts {
+			break
+		}
+
+		ne.logger.Warn(
+			"failed to retrieve domain expiration, will retry",
+			slog.String("domain", monitorDomain),
+			slog.Int("attempt", attempt),
+			slog.Int("maxAttempts", maxAttempts),
+			slog.Any("error", err),
+		)
+
+		select {
+		case <-execCtx.Context().Done():
+			return nil, execCtx.Context().Err()
+		case <-time.After(retryInterval):
+		}
+	}
+
+	return nil, lastErr
 }
 
 func (ne *bizMonitorDomainNodeExecutor) setVariablesOfResult(execCtx *NodeExecutionContext, execRes *NodeExecutionResult, monitorDomain *domain.MonitorDomain) {
